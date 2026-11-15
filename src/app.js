@@ -511,6 +511,19 @@ var APP = (function () {
       msg = "Choose at least two factions.";
     }
     el("seat-warn").textContent = msg;
+    var reachNote = "";
+    if (playing.length >= 2) {
+      var reach = 0;
+      playing.forEach(function (f) {
+        reach += R.REACH[f];
+      });
+      var need = R.REACH_NEEDED[playing.length];
+      reachNote = "Reach " + reach + " (" + playing.length + " players need " + need + " or more for an even game).";
+      if (reach < need) {
+        reachNote += " This line-up is likely to be lopsided; see How To Play.";
+      }
+    }
+    el("reach-note").textContent = reachNote;
     return msg === "";
   }
 

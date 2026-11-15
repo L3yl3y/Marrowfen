@@ -33,6 +33,7 @@
         <div class="field"><label for="opt-speed">Bot speed</label><select id="opt-speed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option></select></div>
         <div class="field"><label for="opt-learn">Learning notes</label><select id="opt-learn"><option value="on" selected>On</option><option value="off">Off</option></select></div>
       </div>
+      <div class="note" id="reach-note" style="margin-top:8px"></div>
       <div class="warn" id="seat-warn"></div>
       <div class="row" style="margin-top:12px"><button class="btn primary" data-act="start">Start Game</button></div>
     </div>
@@ -141,6 +142,9 @@
         <tr><td>Eavesdroppers</td><td>Once in Daylight, look at another player's hand.</td></tr>
         <tr><td>Outriders</td><td>As attacker, ambushes have no effect on you.</td></tr>
       </table>
+
+      <h2>Choosing Factions</h2>
+      <p>Each faction has a <b>reach</b> value, which measures how much it pushes into the fen: the Company 10, the Synod 7, the Wayfarer 5 and the Covenant 3. For an even game the total should be at least 17 with two players, 18 with three and 21 with four. Lower totals can be very one-sided: the Company against the Covenant alone (13) heavily favours the Company. These are the same values Root uses for its own factions.</p>
 
       <h2>Playing Here</h2>
       <p>Every decision appears in the side panel, with the isles you can choose highlighted on the map. <b>Learning Notes</b> explain the rule behind each decision, and <b>Suggest</b> shows what a bot would do. To play online, mark a faction as "Friend online", start the game and share the room code; your friend joins from the same page. Keep your page open, because your browser hosts the game and runs the bots. Games save automatically in your browser.</p>

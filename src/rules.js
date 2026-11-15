@@ -191,6 +191,8 @@ var RULES = (function () {
     CARD_LIST: CARD_LIST,
     CARDS: CARDS,
     WARRIORS: { company: 25, synod: 20, covenant: 10 },
+    REACH: { company: 10, synod: 7, wayfarer: 5, covenant: 3 },
+    REACH_NEEDED: { 2: 17, 3: 18, 4: 21 },
     HAND_LIMIT: 5,
     WIN_VP: 30
   };
