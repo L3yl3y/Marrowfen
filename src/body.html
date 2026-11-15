@@ -1,0 +1,190 @@
+<div id="app">
+  <header id="topbar">
+    <div class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#22302d" stroke="#e2b23a" stroke-width="1.6"/><path d="M5 15c2-2 4-2 7 0s5 2 7 0M8 11V6M11 11V4M14 11V7M17 11V5" fill="none" stroke="#93b44f" stroke-width="1.6" stroke-linecap="round"/></svg>Marrowfen</div>
+    <div id="status">Choose your factions to begin.</div>
+    <div class="top-actions">
+      <button class="btn small" data-act="help">How To Play</button>
+      <button class="btn small" id="learn-toggle" data-act="learn">Learning Notes: On</button>
+      <button class="btn small" data-act="menu" id="menu-btn" hidden>Leave Game</button>
+    </div>
+  </header>
+
+  <section id="lobby">
+    <div class="hero">
+      <div>
+        <h1>Marrowfen</h1>
+        <p>A war for the stilt villages of the fen. Four very different powers fight over the isles: an industrious company of builders, a proud synod bound by its edicts, a secret covenant kindling lanterns of rebellion, and a lone wayfarer who plays every side.</p>
+        <p>Choose who plays each faction. Any faction you do not want can be left out, and bots fill any seat you give them.</p>
+      </div>
+      <svg class="hero-art board" id="lobby-map" aria-label="The map of Marrowfen"></svg>
+    </div>
+
+    <div class="card-panel" id="resume-panel" hidden>
+      <h3>Saved Game</h3>
+      <p class="note" id="resume-text"></p>
+      <div class="row"><button class="btn primary" data-act="resume">Resume</button><button class="btn danger" data-act="discardSave">Discard Save</button></div>
+    </div>
+
+    <div class="card-panel">
+      <h3>Seats</h3>
+      <div class="seat-grid" id="seats"></div>
+      <p class="note" style="margin-top:10px">Two to four factions play. "Friend online" gives you a room code to share; "Same device" passes your screen between players with a curtain so hands stay secret.</p>
+      <div class="row" style="margin-top:10px">
+        <div class="field"><label for="opt-speed">Bot speed</label><select id="opt-speed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option></select></div>
+        <div class="field"><label for="opt-learn">Learning notes</label><select id="opt-learn"><option value="on" selected>On</option><option value="off">Off</option></select></div>
+      </div>
+      <div class="warn" id="seat-warn"></div>
+      <div class="row" style="margin-top:12px"><button class="btn primary" data-act="start">Start Game</button></div>
+    </div>
+
+    <div class="card-panel">
+      <h3>Join A Friend</h3>
+      <p class="note">If a friend is hosting, type the four-letter room code from their screen.</p>
+      <div class="row">
+        <div class="field"><label for="join-code">Room code</label><input id="join-code" maxlength="4" autocomplete="off" placeholder="ABCD"></div>
+        <button class="btn primary" data-act="join">Join</button>
+      </div>
+      <div class="note" id="join-status"></div>
+    </div>
+  </section>
+
+  <main id="table" hidden>
+    <div id="board-wrap">
+      <svg id="board" class="board" aria-label="The fen"></svg>
+      <div id="battle" hidden></div>
+    </div>
+    <aside id="side">
+      <div id="scores"></div>
+      <div class="panel" id="prompt"></div>
+      <div class="panel" id="hand-panel"><h3>Your Hand <span class="note" id="hand-count"></span></h3><div class="cards" id="hand"></div></div>
+      <div class="panel" id="mine"></div>
+      <div class="panel" id="others"></div>
+      <div class="panel"><h3>Chronicle</h3><div id="log"></div></div>
+    </aside>
+  </main>
+
+  <div id="curtain" hidden>
+    <h2 id="curtain-title">Pass The Device</h2>
+    <p id="curtain-text" class="note"></p>
+    <button class="btn primary" id="curtain-btn">I Am Ready</button>
+  </div>
+
+  <div id="help" hidden>
+    <div class="sheet">
+      <button class="btn small close-x" data-act="closeHelp">Close</button>
+      <h1>How To Play Marrowfen</h1>
+      <p>Marrowfen is an asymmetric war game for two to four players. Each faction plays by its own rules and scores points in its own way. The first player to reach <b>30 points</b> wins at once. A player with at least 10 points may instead play a <b>Supremacy</b> card to change how they win.</p>
+      <p>The rules follow the structure of the board game <i>Root</i> (Leder Games) closely, so practice here carries over. The names, map, cards and art are original. The table at the end maps every Marrowfen term to its <i>Root</i> equivalent.</p>
+
+      <h2>The Fen</h2>
+      <p>The map has twelve <b>isles</b> joined by wooden <b>causeways</b>. Each isle has a suit (Peat, Willow or Tide) and one to three building slots. Four isles start with a <b>barrow</b> (an unexplored ruin) filling a slot. The patches of reeds between causeways are <b>reedbeds</b>; only the Wayfarer can enter them.</p>
+      <p><b>Rule.</b> You rule an isle if you have more warriors and buildings there than every other player. Tokens and the Wayfarer do not count. A tie means nobody rules, except that the Gilded Synod rules ties where it has a piece.</p>
+      <p><b>Moving.</b> Move any number of your warriors from one isle along a causeway to the next. You must rule the isle you leave or the isle you enter (or both).</p>
+
+      <h2>A Turn</h2>
+      <p>Players take turns in a random seating order. Each turn has three phases: <b>Birdsong</b>, <b>Daylight</b> and <b>Evening</b>. What you do in each phase is set out on your faction board in the side panel. At the end of every Evening you draw cards (one plus your faction's bonuses) and discard down to five.</p>
+
+      <h2>Cards</h2>
+      <p>The shared deck has 54 cards in four suits: Peat, Willow, Tide and the wild <b>Moon</b> suit. A Moon card can be spent as any suit. Most cards can be <b>crafted</b>: you activate your crafting pieces in isles whose suits match the card's cost, once per piece per turn. Crafting gives an item and points, a lasting effect, or a one-time sweep (the Peat Fire, Willow Blight and Tide Surge remove every enemy piece in isles of that suit). There are also five <b>ambush</b> cards and four <b>Supremacy</b> cards (left out of two-player games).</p>
+
+      <h2>Battle</h2>
+      <ol>
+        <li>Choose an isle where you have warriors (the Wayfarer needs to be there) and an enemy with any piece there.</li>
+        <li><b>Ambush.</b> The defender may play an ambush card matching the isle (or a Moon ambush) to deal two hits at once. The attacker can foil it with a matching ambush of their own. If the ambush leaves the attacker with no warriors, the battle ends.</li>
+        <li><b>Roll.</b> Roll two dice showing 0 to 3. The attacker deals the higher result and the defender the lower, but nobody can deal more rolled hits than they have warriors in the isle.</li>
+        <li><b>Extra hits.</b> A defender with no warriors there is <b>defenceless</b> and takes an extra hit. Cards and abilities can add more.</li>
+        <li><b>Remove pieces.</b> Each hit removes a piece. Warriors go first; then the player taking hits chooses which buildings and tokens to lose. You score one point for every enemy building or token you remove, in battle or otherwise.</li>
+      </ol>
+
+      <h2>The Ironbound Company</h2>
+      <p>An occupying company of builders. The Company starts with a warrior in every isle except the corner opposite its <b>Citadel</b>, plus a claypit, forge and barracks near the Citadel. No other faction can place pieces in the Citadel's isle.</p>
+      <p><b>Birdsong:</b> place one clay at each claypit. <b>Daylight:</b> first craft with your forges, then take three actions, plus one more for each Moon card you spend: <i>Battle</i>; <i>March</i> (two moves); <i>Recruit</i> (a warrior at every barracks, once per turn); <i>Build</i> (pay clay from the isle or any isles connected to it through isles you rule, and score the space you uncover); <i>Overwork</i> (spend a card matching a claypit's isle to place a clay there). <b>Evening:</b> draw one card, plus one for your third and fifth barracks.</p>
+      <p><b>Field Surgeons:</b> whenever Company warriors are removed, you may spend a card matching their isle to return them to the Citadel's isle instead.</p>
+      <table><tr><th>Building number</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr><tr><td>Clay cost</td><td>0</td><td>1</td><td>2</td><td>3</td><td>3</td><td>4</td></tr><tr><td>Claypit points</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Forge points</td><td>0</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Barracks points</td><td>0</td><td>1</td><td>2</td><td>3</td><td>3</td><td>4</td></tr></table>
+
+      <h2>The Gilded Synod</h2>
+      <p>A once-great order sworn to its <b>Edict</b>. The Synod starts with a spire and six warriors in a corner. <b>Old Claim:</b> it rules isles where it is tied, if it has a piece there. <b>Contempt For Commerce:</b> crafted items score only one point (unless the Architect rules).</p>
+      <p><b>Birdsong:</b> if your hand is empty, draw a card; then add one or two cards to the Edict's four columns (Recruit, Move, Battle, Build), at most one of them a Moon card. If you have no spires on the map, raise a new spire with three warriors in the isle with the fewest warriors. <b>Daylight:</b> craft with spires, then carry out every Edict card from left to right. Each card's suit says where: Recruit at a matching spire; Move from a matching isle; Battle in a matching isle; Build a spire in a matching isle you rule. Moon cards and the two Sworn Envoys match anything.</p>
+      <p><b>Collapse:</b> if you cannot carry out a card, the Synod collapses. Lose one point per Moon card in the Edict (Envoys included), discard every Edict card except the Envoys, depose the regent and choose a new one, then go straight to Evening.</p>
+      <p><b>Evening:</b> score for spires on the map (0, 1, 2, 3, 4, 4, 5 for one to seven spires), then draw one card plus one for your third and sixth spires.</p>
+      <p><b>Regents:</b> the Architect (Envoys in Recruit and Move; crafted items score fully), the Orator (Recruit and Battle; every Recruit places two warriors), the Marshal (Move and Battle; one extra hit when attacking), the Tyrant (Move and Build; one extra point when a battle removes enemy buildings or tokens).</p>
+
+      <h2>The Lantern Covenant</h2>
+      <p>A secret movement winning the fen's heart. The Covenant keeps <b>followers</b>, a face-down stack of cards spent for their suit; without a hideout on the map it can hold only five. Its lanterns are its crafting pieces.</p>
+      <p><b>Fen Fighters:</b> when defending, the Covenant deals the higher roll and the attacker the lower. <b>Unrest:</b> whenever another player removes a lantern or moves warriors into a lit isle, they must add a matching card from their hand to the followers; if they have none, they show their hand and the Covenant draws a follower.</p>
+      <p><b>Birdsong:</b> <i>Uprising</i>: spend two followers matching a lit isle (with no hideout, whose suit's hideout is still unbuilt) to remove every enemy piece there, build that hideout, place warriors equal to the lit isles of that suit, and gain a warden. <i>Light A Lantern</i>: spend matching followers to light an isle next to a lantern (anywhere if none are lit); add one more follower under <b>Curfew</b> (another player has three or more warriors there). <b>Daylight:</b> craft, <i>Rally</i> (add a card from your hand to the followers) and <i>Appoint</i> (spend a card matching a hideout's isle to gain a warden). <b>Evening:</b> one operation per warden: move, battle, recruit at a hideout, or <i>Kindle</i> (swap a warrior in an unlit isle for a lantern). Then draw one card plus one per hideout.</p>
+      <p>Losing a hideout discards every follower of its suit and every Moon follower, and sends half the wardens (rounded up) home.</p>
+      <table><tr><th>Lantern</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr><tr><td>Followers</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td>2</td><td>3</td><td>3</td><td>3</td><td>3</td></tr><tr><td>Points</td><td>0</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td>3</td><td>4</td><td>4</td><td>4</td></tr></table>
+
+      <h2>The Wayfarer</h2>
+      <p>A lone traveller with no warriors, who cannot be removed and never rules. The Wayfarer moves regardless of who rules and acts by <b>exhausting items</b>. Tonics, purses and packs sit on tracks when ready: each ready Tonic refreshes two more items in Birdsong, each Purse draws a card in Evening, and each Pack lets you carry two more items than the base six.</p>
+      <p><b>Birdsong:</b> refresh three exhausted items (plus two per Tonic on the track), then <i>Slip</i>: move to an adjacent isle or reedbed for free. <b>Daylight:</b> <i>Move</i> (Waders; one more pair into Hostile warriors), <i>Battle</i> (Blade), <i>Explore</i> a barrow (Lamp, one point and an item), <i>Aid</i> (any item, give a matching card to a player here and take one of their crafted items), <i>Errand</i> (exhaust the two items shown; score a point per errand of that suit or draw two cards), <i>Snipe</i> (Sling, remove an enemy warrior, or a building or token if they have no warriors there), <i>Repair</i> (Mallet), <i>Craft</i> (one Mallet per cost icon, all matching your isle) and your character's special action. <b>Evening:</b> in a reedbed, repair everything; draw one card plus one per Purse; discard to five; drop items beyond your capacity.</p>
+      <p><b>Standing.</b> Aid a faction once (in one turn) to make them Amiable (1 point), twice more in one turn for Friendly (2 points), and three more times in one turn for Allied (2 points). Each aid to an Allied faction scores 2 points, and Allied warriors can move and fight with you. Removing a faction's warrior makes them <b>Hostile</b>: after that, every piece of theirs you remove in battle on your turn scores an extra point (Infamy).</p>
+      <p><b>Characters:</b> the Cutpurse (Pilfer: Lamp, take a random card from a player in your isle), the Mender (Odd Jobs: Lamp, take a matching card from the discard pile) and the Fenwalker (Go To Ground: Lamp, repair three items and end Daylight).</p>
+      <p><b>Coalition:</b> in games of four, the Wayfarer can play a Supremacy card to join the player with the fewest points, and wins if they do.</p>
+
+      <h2>Supremacy</h2>
+      <p>With 10 or more points you may activate a Supremacy card in Daylight. You stop scoring points, and you win at the start of your Birdsong if you rule three isles of that suit (for Moon Supremacy, two opposite corners). A discarded Supremacy card goes beside the board, and anyone can take it in Daylight by spending a matching card.</p>
+
+      <h2>Card Effects</h2>
+      <table>
+        <tr><th>Card</th><th>Effect</th></tr>
+        <tr><td>Bulwark Smiths</td><td>In battle, discard to ignore all rolled hits you would take.</td></tr>
+        <tr><td>Silt Sappers</td><td>In battle as defender, discard to deal an extra hit.</td></tr>
+        <tr><td>Ruthless Charge</td><td>In battle as attacker, deal an extra hit; the defender scores a point.</td></tr>
+        <tr><td>Crown Of Reeds</td><td>In Birdsong, discard to score a point per isle you rule.</td></tr>
+        <tr><td>Toll Gate</td><td>In Birdsong, take a random card from another player; they score a point.</td></tr>
+        <tr><td>Tithe Reeve</td><td>Once in Daylight, remove one of your warriors to draw a card.</td></tr>
+        <tr><td>Common Granary</td><td>At the start of Birdsong, you and another player each draw a card.</td></tr>
+        <tr><td>Punt Builder</td><td>At the start of Evening, take a move.</td></tr>
+        <tr><td>War Horn</td><td>At the start of Daylight, start a battle.</td></tr>
+        <tr><td>Eavesdroppers</td><td>Once in Daylight, look at another player's hand.</td></tr>
+        <tr><td>Outriders</td><td>As attacker, ambushes have no effect on you.</td></tr>
+      </table>
+
+      <h2>Playing Here</h2>
+      <p>Every decision appears in the side panel, with the isles you can choose highlighted on the map. <b>Learning Notes</b> explain the rule behind each decision, and <b>Suggest</b> shows what a bot would do. To play online, mark a faction as "Friend online", start the game and share the room code; your friend joins from the same page. Keep your page open, because your browser hosts the game and runs the bots. Games save automatically in your browser.</p>
+
+      <h2>From Marrowfen To Root</h2>
+      <table>
+        <tr><th>Marrowfen</th><th>Root</th></tr>
+        <tr><td>Isle, causeway, reedbed</td><td>Clearing, path, forest</td></tr>
+        <tr><td>Peat, Willow, Tide, Moon</td><td>Fox, Rabbit, Mouse, Bird</td></tr>
+        <tr><td>Barrow</td><td>Ruin</td></tr>
+        <tr><td>Ironbound Company</td><td>Marquise de Cat</td></tr>
+        <tr><td>Claypit, clay, forge, barracks, Citadel</td><td>Sawmill, wood, workshop, recruiter, Keep</td></tr>
+        <tr><td>Field Surgeons, Overwork</td><td>Field Hospitals, Overwork</td></tr>
+        <tr><td>Gilded Synod</td><td>Eyrie Dynasties</td></tr>
+        <tr><td>Edict, spire, Collapse, Sworn Envoys</td><td>Decree, roost, Turmoil, Loyal Viziers</td></tr>
+        <tr><td>Old Claim, Contempt For Commerce, Urgent Missive</td><td>Lords of the Forest, Disdain for Trade, Emergency Orders</td></tr>
+        <tr><td>Architect, Orator, Marshal, Tyrant</td><td>Builder, Charismatic, Commander, Despot</td></tr>
+        <tr><td>Lantern Covenant</td><td>Woodland Alliance</td></tr>
+        <tr><td>Lantern, followers, wardens, hideout</td><td>Sympathy token, supporters, officers, base</td></tr>
+        <tr><td>Unrest, Uprising, Curfew, Fen Fighters</td><td>Outrage, Revolt, Martial Law, Guerrilla War</td></tr>
+        <tr><td>Light A Lantern, Rally, Appoint, Kindle</td><td>Spread Sympathy, Mobilize, Train, Organize</td></tr>
+        <tr><td>The Wayfarer</td><td>The Vagabond</td></tr>
+        <tr><td>Cutpurse, Mender, Fenwalker</td><td>Thief, Tinker, Ranger</td></tr>
+        <tr><td>Pilfer, Odd Jobs, Go To Ground</td><td>Steal, Day Labor, Hideout</td></tr>
+        <tr><td>Waders, Blade, Sling, Mallet, Tonic, Purse, Pack, Lamp</td><td>Boots, Sword, Crossbow, Hammer, Tea, Coins, Bag, Torch</td></tr>
+        <tr><td>Errands, standing, Snipe, kit</td><td>Quests, relationships, Strike, satchel</td></tr>
+        <tr><td>Supremacy</td><td>Dominance</td></tr>
+        <tr><td>Bulwark Smiths, Silt Sappers, Ruthless Charge</td><td>Armorers, Sappers, Brutal Tactics</td></tr>
+        <tr><td>Crown Of Reeds, Toll Gate, Tithe Reeve</td><td>Royal Claim, Stand and Deliver!, Tax Collector</td></tr>
+        <tr><td>Common Granary, Punt Builder, War Horn</td><td>Better Burrow Bank, Cobbler, Command Warren</td></tr>
+        <tr><td>Eavesdroppers, Outriders</td><td>Codebreakers, Scouting Party</td></tr>
+        <tr><td>Peat Fire, Willow Blight, Tide Surge</td><td>Favor of the Foxes, Rabbits, Mice</td></tr>
+      </table>
+
+      <h2>Where This Version Differs</h2>
+      <ul>
+        <li>The map is original, so it plays differently from the Autumn map. Only the standard setup is used.</li>
+        <li>A few small choices are made for you: which clay pays for a building (nearest first), where clay goes if the Company runs out of clay tokens, which barracks recruit if warriors run short, and which crafting pieces pay a cost of any suit.</li>
+        <li>In battle, the attacker decides on Ruthless Charge and Bulwark Smiths before the defender decides on Silt Sappers and Bulwark Smiths.</li>
+        <li>Crown Of Reeds and the Toll Gate are offered at the start and at the end of Birdsong. Supremacy, the Tithe Reeve and Eavesdroppers are offered between actions in Daylight (for the Synod, before and between Edict cards).</li>
+        <li>For the Wayfarer, the Punt Builder's move needs no Waders and the War Horn's battle needs no Blade. Allied warriors moving with the Wayfarer still need their faction to rule the isle they leave or enter.</li>
+        <li>Victory points never drop below zero.</li>
+      </ul>
+      <p class="note">Marrowfen is an independent fan-made practice game. Root is a trademark of Leder Games; this project is not affiliated with or endorsed by Leder Games.</p>
+    </div>
+  </div>
+</div>

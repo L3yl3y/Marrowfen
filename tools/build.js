@@ -1,0 +1,15 @@
+const fs = require("fs");
+const path = require("path");
+const root = path.join(__dirname, "..");
+const read = f => fs.readFileSync(path.join(root, "src", f), "utf8");
+const FILES = ["mapdata.js", "rules.js", "engine.js", "company.js", "synod.js", "covenant.js", "wayfarer.js", "bot.js", "ui-map.js", "ui.js", "net.js", "app.js"];
+const scripts = FILES.map(read).join("\n");
+const css = read("style.css");
+const body = read("body.html");
+const fonts = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:ital,wght@0,400;0,600;1,400&display=swap">';
+const title = "<title>Marrowfen</title>";
+const icon = '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2710%27 fill=%27%2322302d%27 stroke=%27%23e2b23a%27 stroke-width=%271.6%27/%3E%3Cpath d=%27M5 15c2-2 4-2 7 0s5 2 7 0M8 11V6M11 11V4M14 11V7M17 11V5%27 fill=%27none%27 stroke=%27%2393b44f%27 stroke-width=%271.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">';
+const page = '<!doctype html>\n<html lang="en-GB">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="description" content="Marrowfen: an asymmetric war game for two to four players in a fen of stilt villages. Play against bots or with a friend online.">\n' + title + "\n" + icon + "\n" + fonts + "\n<style>\n" + css + "</style>\n</head>\n<body>\n" + body + '\n<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>\n<script>\n' + scripts + "</script>\n</body>\n</html>\n";
+fs.mkdirSync(path.join(root, "docs"), { recursive: true });
+fs.writeFileSync(path.join(root, "docs", "index.html"), page);
+console.log("docs/index.html", page.length, "bytes");
